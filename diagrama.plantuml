@@ -1,0 +1,46 @@
+@startuml apifecha
+
+package "com.apifecha.apifecha.domain.model" {
+    class Festivo {
+        - Integer id
+        - String nombre
+        - Integer dia
+        - Integer mes
+        - Integer diasPascua
+        - Tipo tipo
+    }
+
+    class Tipo {
+        - Integer id
+        - String tipo
+    }
+    
+    Festivo --> Tipo : pertenece a
+}
+
+package "com.apifecha.apifecha.domain.repository" {
+    interface FestivoRepository {
+        + List<Festivo> findAll()
+    }
+}
+
+package "com.apifecha.apifecha.application.service" {
+    class FestivoService {
+        - FestivoRepository festivoRepository
+        + Optional<Festivo> obtenerFestivo(LocalDate fecha)
+        + boolean esFestivo(LocalDate fecha)
+    }
+    
+    FestivoService --> FestivoRepository
+}
+
+package "com.apifecha.apifecha.infrastructure.controller" {
+    class FestivoController {
+        - FestivoService festivoService
+        + ResponseEntity<String> esFestivo(String fecha)
+    }
+    
+    FestivoController --> FestivoService
+}
+
+@enduml
